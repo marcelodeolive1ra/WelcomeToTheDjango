@@ -11,12 +11,12 @@ from .models import *
 def index(request):
     materias = Materia.objects.all()
 
-    return render_to_response('hello/index.html', {'materias': materias})
+    return render_to_response('hello/index.html', {'materias': materias, 'pagina': 'Welcome to the Django'})
 
 
 @login_required(login_url='/login/')
 def supersecret(request):
-    return render_to_response('hello/supersecret.html', {})
+    return render_to_response('hello/supersecret.html', {'pagina': 'Supersecret'})
 
 
 def login(request):
@@ -42,6 +42,7 @@ def login(request):
         except:
             dict['erro'] = 'Usuário ou senha inválidos.'
 
+    dict['pagina'] = 'Login - Welcome to the Django'
     return render(request, 'hello/login.html', dict)
 
 
@@ -50,3 +51,28 @@ def logout(request):
         django_logout(request)
 
     return HttpResponseRedirect('/')
+
+
+def cadastro(request):
+    if request.method == 'POST':
+        nome = request.POST['nome']
+        sobrenome = request.POST['sobrenome']
+        senha = request.POST['senha']
+        email = request.POST['email']
+        RA = request.POST['RA']
+        curso = request.POST['curso']
+        sexo = request.POST['sexo']
+
+        user = User(username=email, email=email, first_name=nome, last_name=sobrenome, password=senha)
+        user.save()
+
+        curso = Curso.objects.get(id=curso)
+        aluno = Aluno(user=user, RA=RA, curso=curso, sexo=sexo)
+        aluno.save()
+
+        # TODO Continuar na próxima aula
+
+        return render(request, 'hello/cadastro.html', {})
+    else:
+        cursos = Curso.objects.all()
+        return render(request, 'hello/cadastro.html', {'cursos': cursos})

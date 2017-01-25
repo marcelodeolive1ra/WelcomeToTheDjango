@@ -6,4 +6,5 @@ urlpatterns = [
     url(r'^supersecret/$', supersecret, name='supersecret'),
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout, name='logout'),
+    url(r'^cadastro/$', cadastro, name='cadastro'),
 ]
